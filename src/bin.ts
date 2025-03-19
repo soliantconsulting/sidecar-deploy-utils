@@ -107,7 +107,7 @@ const templateObjectKey = await getTemplateObjectKey();
 const manifestObjectKey = await publishSidecarManifest();
 await runCommand("pnpm", [
     "dlx",
-    "cdk-assets@^2",
+    "cdk-assets@^3",
     "publish",
     "-p",
     "./cdk.out/SidecarStack.assets.json",
