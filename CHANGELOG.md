@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.7...v1.2.8) (2025-04-26)
+
+
+### Bug Fixes
+
+* prune main folder before releasing new main version ([318f0a8](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/318f0a8f32c4f03b078f5c8b18082599c4a909ba))
+
 ## [1.2.7](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.6...v1.2.7) (2025-04-26)
 
 
