@@ -15,7 +15,7 @@ import {
 import { CfnFunction, Code, Function as LambdaFunction, Runtime } from "aws-cdk-lib/aws-lambda";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
-import { getConfig } from "./config.js";
+import { type Config, getConfig } from "./config.js";
 
 export const createCdkApp = <T extends Stack>(
     StackClass: new (scope: Construct, id: string) => T,
@@ -32,7 +32,9 @@ export const createCdkApp = <T extends Stack>(
     });
 
     const stack = new StackClass(app, "SidecarStack");
-    const sidecarAssetTransfer = new SidecarAssetTransfer(stack, "SidecarAssetTransfer");
+    const sidecarAssetTransfer = new SidecarAssetTransfer(stack, "SidecarAssetTransfer", {
+        config,
+    });
 
     for (const node of stack.node.findAll()) {
         if (node instanceof CfnFunction) {
@@ -99,10 +101,14 @@ class SidecarSynthesizer extends DefaultStackSynthesizer {
     }
 }
 
+type SidecarAssetTransferProps = {
+    config: Config;
+};
+
 class SidecarAssetTransfer extends Construct {
     public readonly resource: CfnResource;
 
-    public constructor(scope: Construct, id: string) {
+    public constructor(scope: Construct, id: string, props: SidecarAssetTransferProps) {
         super(scope, id);
         const { synthesizer } = Stack.of(this);
 
@@ -110,7 +116,13 @@ class SidecarAssetTransfer extends Construct {
             throw new Error("S3AssetTransfer requires SidecarSynthesizer");
         }
 
-        const bucket = new Bucket(this, "AssetBucket", {
+        const sourceBucket = Bucket.fromBucketName(
+            this,
+            "SourceBucket",
+            props.config.assetBucketName,
+        );
+
+        const targetBucket = new Bucket(this, "AssetBucket", {
             bucketName: localAssetBucketName,
             removalPolicy: RemovalPolicy.DESTROY,
         });
@@ -128,7 +140,8 @@ class SidecarAssetTransfer extends Construct {
             allowPublicSubnet: true,
             code: Code.fromInline(copyCode),
         });
-        bucket.grantReadWrite(copyFunction);
+        targetBucket.grantReadWrite(copyFunction);
+        sourceBucket.grantRead(copyFunction);
 
         this.resource = new CfnResource(this, "CopyResource", {
             type: "Custom::SidecarAssetTransfer",
@@ -140,15 +153,15 @@ class SidecarAssetTransfer extends Construct {
                         ? `main-${new Date().toISOString()}`
                         : synthesizer.sidecarVersion,
                 SourceBucketName: synthesizer.sidecarBucketName,
-                TargetBucketName: bucket.bucketName,
+                TargetBucketName: targetBucket.bucketName,
                 BucketPrefix: synthesizer.sidecarBucketPrefix,
                 ServiceToken: copyFunction.functionArn,
                 ServiceTimeout: copyFunction.timeout?.toSeconds(),
             },
         });
 
-        if (bucket.policy) {
-            this.resource.node.addDependency(bucket.policy);
+        if (targetBucket.policy) {
+            this.resource.node.addDependency(targetBucket.policy);
         }
 
         this.resource.applyRemovalPolicy(RemovalPolicy.DESTROY);
