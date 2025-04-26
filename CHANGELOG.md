@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.6...v1.2.7) (2025-04-26)
+
+
+### Bug Fixes
+
+* **copy-handler:** read s3 object into buffer before uploading ([c2ac374](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/c2ac374bf2378035279d2ae07b829c30dc64c6ba))
+
 ## [1.2.6](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.5...v1.2.6) (2025-04-26)
 
 
