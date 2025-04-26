@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.1.0...v1.2.0) (2025-04-26)
+
+
+### Features
+
+* add custom resource to transfer sidecar assets to local bucket ([564b71a](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/564b71a5ba19d4ffae689feb33680f9296a91e78))
+
 # [1.1.0](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.0.0...v1.1.0) (2025-03-19)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@soliantconsulting/sidecar-deploy-utils",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Deploy utilities for Sidecars",
   "type": "module",
   "author": "Soliant Consulting",
