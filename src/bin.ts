@@ -1,6 +1,11 @@
 import { spawn } from "node:child_process";
 import { readFile } from "node:fs/promises";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+    DeleteObjectsCommand,
+    ListObjectsV2Command,
+    PutObjectCommand,
+    S3Client,
+} from "@aws-sdk/client-s3";
 import { createSignedFetcher } from "aws-sigv4-fetch";
 import { getConfig } from "./config.js";
 
@@ -102,9 +107,46 @@ const publishVersion = async (
     }
 };
 
+const pruneMainFolder = async (): Promise<void> => {
+    const s3 = new S3Client();
+    let continuationToken: string | undefined;
+
+    do {
+        const listResponse = await s3.send(
+            new ListObjectsV2Command({
+                Bucket: config.assetBucketName,
+                Prefix: `${config.sidecarName}/${config.sidecarVersion}/`,
+                ContinuationToken: continuationToken,
+            }),
+        );
+
+        const objects = listResponse.Contents ?? [];
+
+        if (objects.length > 0) {
+            const deleteParams = {
+                Bucket: config.assetBucketName,
+                Delete: {
+                    Objects: objects.map((obj) => ({ Key: obj.Key })),
+                    Quiet: true,
+                },
+            };
+
+            await s3.send(new DeleteObjectsCommand(deleteParams));
+        }
+
+        continuationToken = listResponse.NextContinuationToken;
+    } while (continuationToken);
+};
+
 await runCommand("pnpm", ["cdk", "synth"]);
+
+if (config.sidecarVersion === "main") {
+    await pruneMainFolder();
+}
+
 const templateObjectKey = await getTemplateObjectKey();
 const manifestObjectKey = await publishSidecarManifest();
+
 await runCommand("pnpm", [
     "dlx",
     "cdk-assets@^3",
