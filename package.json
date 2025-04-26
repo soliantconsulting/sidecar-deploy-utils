@@ -9,7 +9,8 @@
     "access": "public"
   },
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "assets/**/*"
   ],
   "bin": {
     "sidecar-deploy": "./dist/bin.js"
@@ -48,7 +49,7 @@
   "peerDependencies": {
     "aws-cdk-lib": "^2.178.1"
   },
-  "packageManager": "pnpm@10.1.0+sha512.c89847b0667ddab50396bbbd008a2a43cf3b581efd59cf5d9aa8923ea1fb4b8106c041d540d08acb095037594d73ebc51e1ec89ee40c88b30b8a66c0fae0ac1b",
+  "packageManager": "pnpm@10.9.0+sha512.0486e394640d3c1fb3c9d43d49cf92879ff74f8516959c235308f5a8f62e2e19528a65cdc2a3058f587cde71eba3d5b56327c8c33a97e4c4051ca48a10ca2d5f",
   "pnpm": {
     "onlyBuiltDependencies": [
       "lefthook"
