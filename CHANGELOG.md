@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.0...v1.2.1) (2025-04-26)
+
+
+### Bug Fixes
+
+* add missing colon to custom resource name ([281c495](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/281c49556f3286075fc263af6220786a9d9c9757))
+
 # [1.2.0](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.1.0...v1.2.0) (2025-04-26)
 
 
