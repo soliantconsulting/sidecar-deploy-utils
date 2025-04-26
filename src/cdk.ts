@@ -115,7 +115,7 @@ class SidecarAssetTransfer extends Construct {
         bucket.grantWrite(copyFunction);
 
         this.resource = new CfnResource(this, "CopyResource", {
-            type: "Custom:SidecarAssetTransfer",
+            type: "Custom::SidecarAssetTransfer",
             properties: {
                 // This property ensures that the resource only runs on version change, or if "main", whenever a new
                 // main version was pushed.
