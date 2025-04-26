@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.3...v1.2.4) (2025-04-26)
+
+
+### Bug Fixes
+
+* move minify to dev dependencies ([ede6d39](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/ede6d39ffa45d989ddde3a2b77a9d57f1492412c))
+
 ## [1.2.3](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.2...v1.2.3) (2025-04-26)
 
 
