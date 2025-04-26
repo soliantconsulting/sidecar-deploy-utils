@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.5...v1.2.6) (2025-04-26)
+
+
+### Bug Fixes
+
+* grant read permission to source bucket ([01d9eec](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/01d9eec52d4c9caedfe88ecd009102cfa53c98f6))
+
 ## [1.2.5](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.4...v1.2.5) (2025-04-26)
 
 
