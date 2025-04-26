@@ -39,6 +39,21 @@ export const createCdkApp = <T extends Stack>(
             if ("s3Bucket" in node.code && node.code.s3Bucket === localAssetBucketName) {
                 node.addDependency(sidecarAssetTransfer.resource);
             }
+
+            continue;
+        }
+
+        if (node instanceof CfnResource && node.cfnResourceType === "AWS::Lambda::Function") {
+            // biome-ignore lint/complexity/useLiteralKeys: Access to protected properties
+            const properties = node["cfnProperties"] as {
+                Code: {
+                    S3Bucket?: string;
+                };
+            };
+
+            if (properties.Code.S3Bucket === localAssetBucketName) {
+                node.addDependency(sidecarAssetTransfer.resource);
+            }
         }
     }
 
@@ -97,10 +112,11 @@ class SidecarAssetTransfer extends Construct {
 
         const bucket = new Bucket(this, "AssetBucket", {
             bucketName: localAssetBucketName,
+            removalPolicy: RemovalPolicy.DESTROY,
         });
 
         const copyCode = readFileSync(
-            fileURLToPath(new URL("../assets/copy-handler.js", import.meta.url)),
+            fileURLToPath(new URL("../assets/copy-handler.min.js", import.meta.url)),
             { encoding: "utf8" },
         );
 
@@ -112,7 +128,7 @@ class SidecarAssetTransfer extends Construct {
             allowPublicSubnet: true,
             code: Code.fromInline(copyCode),
         });
-        bucket.grantWrite(copyFunction);
+        bucket.grantReadWrite(copyFunction);
 
         this.resource = new CfnResource(this, "CopyResource", {
             type: "Custom::SidecarAssetTransfer",
@@ -130,6 +146,10 @@ class SidecarAssetTransfer extends Construct {
                 ServiceTimeout: copyFunction.timeout?.toSeconds(),
             },
         });
+
+        if (bucket.policy) {
+            this.resource.node.addDependency(bucket.policy);
+        }
 
         this.resource.applyRemovalPolicy(RemovalPolicy.DESTROY);
     }

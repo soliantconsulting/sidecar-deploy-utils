@@ -26,7 +26,7 @@
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && pnpm minify ./assets/copy-handler.js > ./assets/copy-handler.min.js",
     "format": "biome format . --write",
     "check": "biome check . --write"
   },
@@ -44,7 +44,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
-    "aws-sigv4-fetch": "^4.4.1"
+    "aws-sigv4-fetch": "^4.4.1",
+    "minify": "^14.0.0"
   },
   "peerDependencies": {
     "aws-cdk-lib": "^2.178.1"
@@ -52,6 +53,7 @@
   "packageManager": "pnpm@10.9.0+sha512.0486e394640d3c1fb3c9d43d49cf92879ff74f8516959c235308f5a8f62e2e19528a65cdc2a3058f587cde71eba3d5b56327c8c33a97e4c4051ca48a10ca2d5f",
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@swc/core",
       "lefthook"
     ]
   }
