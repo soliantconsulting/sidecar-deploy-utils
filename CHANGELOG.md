@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.2...v1.2.3) (2025-04-26)
+
+
+### Bug Fixes
+
+* update security dependencies ([5684c8b](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/5684c8b36bac63220201ada654de18d98a1a3e3f))
+
 ## [1.2.2](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.1...v1.2.2) (2025-04-26)
 
 
