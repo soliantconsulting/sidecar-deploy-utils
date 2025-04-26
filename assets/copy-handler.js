@@ -45,7 +45,7 @@ const handleCreateOrUpdate = async (event, context) => {
 
             const objects = listResponse.Contents ?? [];
 
-            await Promise.all(objects.map(async (obj) => {
+            for (const obj of objects) {
                 const sourceKey = obj.Key;
 
                 if (!sourceKey) {
@@ -59,14 +59,16 @@ const handleCreateOrUpdate = async (event, context) => {
                     Key: sourceKey,
                 }));
 
+                const buffer = await streamToBuffer(getObjectResponse.Body);
+
                 await s3Target.send(new PutObjectCommand({
                     Bucket: targetBucket,
                     Key: targetKey,
-                    Body: getObjectResponse.Body,
+                    Body: buffer,
                 }));
 
                 console.info(`Copied: ${sourceKey} to ${targetKey}`);
-            }));
+            }
 
             continuationToken = listResponse.NextContinuationToken;
         } while (continuationToken);
@@ -76,6 +78,16 @@ const handleCreateOrUpdate = async (event, context) => {
         console.error(error);
         await response.send(event, context, response.FAILED);
     }
+};
+
+const streamToBuffer = async (stream) => {
+    return new Promise((resolve, reject) => {
+        const chunks = [];
+
+        stream.on("data", (chunk) => chunks.push(chunk));
+        stream.on("error", reject);
+        stream.on("end", () => resolve(Buffer.concat(chunks)));
+    });
 };
 
 const handleDelete = async (event, context) => {
