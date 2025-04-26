@@ -1,3 +1,10 @@
+## [1.2.5](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.4...v1.2.5) (2025-04-26)
+
+
+### Bug Fixes
+
+* **copy-handler:** properly handle cross-region copying ([f9a000f](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/f9a000fc1a21a286a42eb2d01ce3ddae286eb0f6))
+
 ## [1.2.4](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.3...v1.2.4) (2025-04-26)
 
 
