@@ -14,9 +14,6 @@ importers:
       aws-sigv4-fetch:
         specifier: ^4.4.1
         version: 4.4.1
-      minify:
-        specifier: ^14.0.0
-        version: 14.0.0
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -42,6 +39,9 @@ importers:
       lefthook:
         specifier: ^1.11.11
         version: 1.11.11
+      minify:
+        specifier: ^14.0.0
+        version: 14.0.0
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
