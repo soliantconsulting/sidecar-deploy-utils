@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.1...v1.2.2) (2025-04-26)
+
+
+### Bug Fixes
+
+* resolve circular dependency for bucket deletion ([3b1c2eb](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/3b1c2eb887bdbaa1729ac5297040e772214874a2))
+
 ## [1.2.1](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.0...v1.2.1) (2025-04-26)
 
 
