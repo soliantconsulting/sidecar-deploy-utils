@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.8...v1.3.0) (2025-04-27)
+
+
+### Features
+
+* add testing framework for stacks ([3f6e332](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/3f6e332fe9ffb2335d9bcb91df6beed3d9d40f14))
+
 ## [1.2.8](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.7...v1.2.8) (2025-04-26)
 
 
