@@ -12,7 +12,12 @@ import {
     RemovalPolicy,
     Stack,
 } from "aws-cdk-lib";
-import { CfnFunction, Code, Function as LambdaFunction, Runtime } from "aws-cdk-lib/aws-lambda";
+import {
+    CfnFunction,
+    Code,
+    Function as LambdaFunction,
+    determineLatestNodeRuntime,
+} from "aws-cdk-lib/aws-lambda";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { type Config, getConfig } from "./config.js";
@@ -133,7 +138,7 @@ class SidecarAssetTransfer extends Construct {
         );
 
         const copyFunction = new LambdaFunction(this, "CopyFunction", {
-            runtime: Runtime.NODEJS_LATEST,
+            runtime: determineLatestNodeRuntime(this),
             handler: "index.handler",
             memorySize: 1024,
             timeout: Duration.minutes(5),

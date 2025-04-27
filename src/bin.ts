@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import {
     DeleteObjectsCommand,
     ListObjectsV2Command,
@@ -139,12 +139,13 @@ const pruneMainFolder = async (): Promise<void> => {
 };
 
 await runCommand("pnpm", ["cdk", "synth"]);
+const templateObjectKey = await getTemplateObjectKey();
 
 if (config.sidecarVersion === "main") {
     await pruneMainFolder();
+    await writeFile("main-template-object-key", templateObjectKey, { encoding: "utf-8" });
 }
 
-const templateObjectKey = await getTemplateObjectKey();
 const manifestObjectKey = await publishSidecarManifest();
 
 await runCommand("pnpm", [
