@@ -6,9 +6,6 @@ import {
     DefaultStackSynthesizer,
     type DockerImageAssetLocation,
     Duration,
-    type FileAssetLocation,
-    type FileAssetSource,
-    Fn,
     RemovalPolicy,
     Stack,
 } from "aws-cdk-lib";
@@ -43,7 +40,11 @@ export const createCdkApp = <T extends Stack>(
 
     for (const node of stack.node.findAll()) {
         if (node instanceof CfnFunction) {
-            if ("s3Bucket" in node.code && node.code.s3Bucket === localAssetBucketName) {
+            if ("s3Bucket" in node.code && node.code.s3Bucket === config.assetBucketName) {
+                node.code = {
+                    ...node.code,
+                    s3Bucket: sidecarAssetTransfer.targetBucket.bucketName,
+                };
                 node.addDependency(sidecarAssetTransfer.resource);
             }
 
@@ -58,7 +59,8 @@ export const createCdkApp = <T extends Stack>(
                 };
             };
 
-            if (properties.Code.S3Bucket === localAssetBucketName) {
+            if (properties.Code.S3Bucket === config.assetBucketName) {
+                properties.Code.S3Bucket = sidecarAssetTransfer.targetBucket.bucketName;
                 node.addDependency(sidecarAssetTransfer.resource);
             }
         }
@@ -66,8 +68,6 @@ export const createCdkApp = <T extends Stack>(
 
     return app;
 };
-
-const localAssetBucketName = Fn.sub("${AWS::StackName}-assets-${AWS::AccountId}-${AWS::Region}");
 
 type SidecarSynthesizerProps = {
     bucketName: string;
@@ -94,13 +94,6 @@ class SidecarSynthesizer extends DefaultStackSynthesizer {
         this.sidecarVersion = props.version;
     }
 
-    public override addFileAsset(asset: FileAssetSource): FileAssetLocation {
-        return {
-            ...super.addFileAsset(asset),
-            bucketName: localAssetBucketName,
-        };
-    }
-
     public override addDockerImageAsset(): DockerImageAssetLocation {
         throw new Error("Docker image assets are not supported");
     }
@@ -112,6 +105,7 @@ type SidecarAssetTransferProps = {
 
 class SidecarAssetTransfer extends Construct {
     public readonly resource: CfnResource;
+    public readonly targetBucket: Bucket;
 
     public constructor(scope: Construct, id: string, props: SidecarAssetTransferProps) {
         super(scope, id);
@@ -127,8 +121,7 @@ class SidecarAssetTransfer extends Construct {
             props.config.assetBucketName,
         );
 
-        const targetBucket = new Bucket(this, "AssetBucket", {
-            bucketName: localAssetBucketName,
+        this.targetBucket = new Bucket(this, "AssetBucket", {
             removalPolicy: RemovalPolicy.DESTROY,
         });
 
@@ -145,7 +138,7 @@ class SidecarAssetTransfer extends Construct {
             allowPublicSubnet: true,
             code: Code.fromInline(copyCode),
         });
-        targetBucket.grantReadWrite(copyFunction);
+        this.targetBucket.grantReadWrite(copyFunction);
         sourceBucket.grantRead(copyFunction);
 
         this.resource = new CfnResource(this, "CopyResource", {
@@ -158,15 +151,15 @@ class SidecarAssetTransfer extends Construct {
                         ? `main-${new Date().toISOString()}`
                         : synthesizer.sidecarVersion,
                 SourceBucketName: synthesizer.sidecarBucketName,
-                TargetBucketName: targetBucket.bucketName,
+                TargetBucketName: this.targetBucket.bucketName,
                 BucketPrefix: synthesizer.sidecarBucketPrefix,
                 ServiceToken: copyFunction.functionArn,
                 ServiceTimeout: copyFunction.timeout?.toSeconds(),
             },
         });
 
-        if (targetBucket.policy) {
-            this.resource.node.addDependency(targetBucket.policy);
+        if (this.targetBucket.policy) {
+            this.resource.node.addDependency(this.targetBucket.policy);
         }
 
         this.resource.applyRemovalPolicy(RemovalPolicy.DESTROY);
