@@ -168,6 +168,7 @@ export const testMainStack = async (options: TestMainStackOptions): Promise<void
         process.exit(1);
     }
 
+    let stackCreated = false;
     let callbackError: unknown = undefined;
 
     try {
@@ -190,6 +191,8 @@ export const testMainStack = async (options: TestMainStackOptions): Promise<void
             parameters,
         );
 
+        stackCreated = true;
+
         if (options.stackTest) {
             try {
                 const outputs = await getStackOutputs(cf, stackName);
@@ -204,7 +207,12 @@ export const testMainStack = async (options: TestMainStackOptions): Promise<void
         process.exitCode = 1;
     } finally {
         try {
-            await deleteStack(cf, stackName);
+            if (stackCreated) {
+                await deleteStack(cf, stackName);
+            } else {
+                console.info("Stack creation failed; skipping delete for introspection.");
+            }
+
             await ssm.send(
                 new DeleteParameterCommand({
                     Name: configParameterName,
@@ -218,5 +226,7 @@ export const testMainStack = async (options: TestMainStackOptions): Promise<void
         if (callbackError) {
             process.exit(1);
         }
+
+        process.exit(process.exitCode);
     }
 };
