@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.3.0...v1.3.1) (2025-04-28)
+
+
+### Bug Fixes
+
+* use generated bucket name instead of pre-defined one ([0097903](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/00979031e7b01281c12b1488844f87694afc2ee6))
+
 # [1.3.0](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.2.8...v1.3.0) (2025-04-27)
 
 
