@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.3.1...v1.3.2) (2025-04-28)
+
+
+### Bug Fixes
+
+* only delete stack when it was successfully created ([86539ae](https://github.com/soliantconsulting/sidecar-deploy-utils/commit/86539aedccf526665b920c6c1f8f8a1ebbe2d4f7))
+
 ## [1.3.1](https://github.com/soliantconsulting/sidecar-deploy-utils/compare/v1.3.0...v1.3.1) (2025-04-28)
 
 
